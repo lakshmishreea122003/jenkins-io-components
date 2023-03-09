@@ -31,7 +31,7 @@ export class Navbar extends LitElement {
 
   /**
    * Show search box
-   * (doesnt yet work)
+   * (doesn't yet work)
    */
   @property({type: Boolean})
   showSearchBox: Boolean = false;
@@ -209,7 +209,7 @@ export class Navbar extends LitElement {
           aria-label="Toggle navigation">
           <ion-icon name="menu-outline" title="Toggle Menu Visible"></ion-icon>
         </button>
-        <div class="navbar-menu collapse ${this.menuToggled ? "show" : ""}">
+        <div class=${this.menuToggled ? "navbar-menu collapse show" : "navbar-menu collapse"}>
           <ul class="nav navbar-nav mr-auto">
             ${this.renderNavItemDropdown({label: html`<jio-cdf-logo></jio-cdf-logo>`, link: cdfMenuItems}, 99, this.visibleMenu === 99)}
           </ul>
@@ -249,7 +249,7 @@ export class Navbar extends LitElement {
     if (!Array.isArray(menuItem.link)) {
       return this.renderNavItemLink(menuItem);
     }
-    const linksHtml = menuItem.link.map(menuItem => this.renderNavItemLink(menuItem, ['dropdown-item feature']));
+    const linksHtml = menuItem.link.map(menuItem => this.renderNavItemLink(menuItem, ['dropdown-item', 'feature']));
     return html`
       <li class="nav-item dropdown">
         <button
@@ -257,10 +257,10 @@ export class Navbar extends LitElement {
           data-idx=${idx}
           aria-expanded=${visible ? "true" : "false"}
           aria-haspopup="true"
-          class="nav-link dropdown-toggle ${visible ? "show" : ""}"
+          class=${visible ? "nav-link dropdown-toggle show" : "nav-link dropdown-toggle"}
         >${menuItem.label}</button>
-        <div class="dropdown-menu ${visible ? "show" : ""}">
-          ${linksHtml}
+        <div class=${visible ? "dropdown-menu show" : "dropdown-menu"}>
+            ${linksHtml}
         </div>
       </li>
     `;
@@ -279,7 +279,7 @@ export class Navbar extends LitElement {
       ?header=${menuItem.header}
       href=${menuItem.link}
       title=${ifDefined(menuItem.title)}
-      >${menuItem.header ? html`<strong>${menuItem.label}</strong>` : menuItem.label}</jio-navbar-link>`;
+      >${menuItem.header ? html`<strong>${menuItem.label}</strong>` : html`<span class="jio-navbar-link-label">${menuItem.label}</span>`}</jio-navbar-link>`;
   }
 
   private _clickCollapseButton(e: Event) {
