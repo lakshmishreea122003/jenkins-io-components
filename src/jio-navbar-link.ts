@@ -8,9 +8,8 @@ export class NavbarLink extends LitElement {
 .nav-link {
   color: rgba(255, 255, 255, 0.55);
   display: block;
-  padding: 0.5em 0;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding: 0;
+  margin: 0.5rem;
   text-decoration: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
@@ -21,7 +20,8 @@ export class NavbarLink extends LitElement {
   color: #212529;
   display: block;
   font-weight: 400;
-  padding: 0.25em 1rem;
+  //padding: 0.25em 1rem;
+  padding: 0;
   text-align: inherit;
   text-decoration: none;
   white-space: nowrap;
@@ -39,15 +39,13 @@ export class NavbarLink extends LitElement {
 	text-decoration: none;
 	background-color: #0070EB;
 }
-
-
+    
 .dropdown-item.active,
 .dropdown-item:active {
   background-color: #007bff;
   color: #fff;
   text-decoration: none;
 }
-
   `;
 
   @property()
@@ -72,10 +70,33 @@ export class NavbarLink extends LitElement {
       title = this.title;
     }
     const {isActive, href} = relOrAbsoluteLink(this.href, this.property, this.locationPathname);
-    return html`<a class=${`nav-link ${this.class} ${isActive ? "active" : ""}`} title=${ifDefined(title)} href=${href}>
+
+
+    return html`<a class=${isActive ? "nav-link " + `${this.class}` + " active" : "nav-link " + `${this.class}`} title=${ifDefined(title)} href=${href}
+        onmouseenter="dropDownOnMouseEnter()" onmouseleave="revertDropDownOnMouseLeave()"
+    >
         <slot></slot>
       </a>`;
   }
+
+  // dropDownOnMouseEnter() {
+  //   const hoveredElement = document.querySelector('li:nth-child(-n+2).nav-item.dropdown:hover span.jio-navbar-link-label') as HTMLElement;
+  //   if (screen.width < 991) {
+  //     hoveredElement.addEventListener("mouseenter", () => {
+  //       this.style.display = "block";
+  //       this.style.color = "red";
+  //     });
+  //   }
+  // }
+  //
+  // revertDropDownOnMouseLeave() {
+  //   const hoveredElement = document.querySelector('li:nth-child(-n+2).nav-item.dropdown:hover span.jio-navbar-link-label') as HTMLElement;
+  //   if (screen.width < 991) {
+  //     hoveredElement.addEventListener("mouseleave", () => {
+  //       this.style.display = "none";
+  //     });
+  //   }
+  // }
 }
 
 export const cleanPathname = (pathname: string) => {
@@ -88,13 +109,13 @@ export const relOrAbsoluteLink = (href: string, property: string, locationPathna
   let isActive = false;
 
   if (parsedPropertyUrl.host === parsedMenuItem.host) {
-    // if its one of my properties, then its a relative link
+    // if its one of my properties, then it's a relative link
     href = parsedMenuItem.toString().substring(parsedMenuItem.toString().split('/').slice(0, 3).join('/').length);
     if (locationPathname && cleanPathname(locationPathname) === cleanPathname(parsedMenuItem.pathname)) {
       isActive = true;
     }
   } else if (parsedPropertyUrl.host !== parsedMenuItem.host) {
-    // if its a different property, then full url
+    // if it's a different property, then full url
     href = parsedMenuItem.toString();
   } else {
     throw new Error(href);
